@@ -2,6 +2,8 @@ package com.example.cgaima.flicks;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,6 +42,11 @@ public class MovieListActivity extends AppCompatActivity {
     //the list of currently playing movies
     ArrayList<Movie> movies;
 
+    //track the recycler view
+    RecyclerView rvMovies;
+    //the adapter wired to the recycler view
+    MovieAdapter adapter;
+
 
 
     @Override
@@ -51,6 +58,15 @@ public class MovieListActivity extends AppCompatActivity {
         client = new AsyncHttpClient();
         //initialize the list of movies
         movies  = new ArrayList<>();
+
+        //initialize the adapter -- movies array cannot be reinitialized
+        adapter = new MovieAdapter(movies);
+
+        //resolve the recycler view and connect a layout manager and the adapter
+        rvMovies = (RecyclerView) findViewById(R.id.rvMovies);
+        rvMovies.setLayoutManager(new LinearLayoutManager(this));
+        rvMovies.setAdapter(adapter);
+
         //get configuration on app creation
         getConfig();
 
@@ -76,6 +92,9 @@ public class MovieListActivity extends AppCompatActivity {
                     {
                         Movie movie = new Movie(results.getJSONObject(i));
                         movies.add(movie);
+
+                        //notify adapter that a row was added
+                        adapter.notifyItemInserted(movies.size() -1);
                     }
 
                     Log.i(TAG, String.format("Loaded %s movies", results.length()));
