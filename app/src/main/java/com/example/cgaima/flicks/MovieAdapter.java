@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.cgaima.flicks.models.Config;
 import com.example.cgaima.flicks.models.Movie;
 
 import java.util.ArrayList;
@@ -18,6 +19,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     //list of movies
     ArrayList<Movie> movies;
 
+    //config needed for image urls
+    Config config;
+
+    //context for rendering
+    Context context;
+
     //initialize with list
 
 
@@ -25,14 +32,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         this.movies = movies;
     }
 
-
+    public void setConfig(Config config) {
+        this.config = config;
+    }
 
     //creates and inflate a new view
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         //get context from the parent
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         //create the view using the item_movie layout
@@ -51,7 +60,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.tvTitle.setText(movie.getTitle());
         holder.tvOverview.setText(movie.getOverview());
 
-        // TODO - set image using Glide
+        // buikld url for poster image
+        String ImageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+
+        //load image using glide
+        GlideApp.with(context)
+                .load(ImageUrl)
+                .into(holder.ivPosterImage);
+
 
     }
 
