@@ -14,6 +14,8 @@ import com.example.cgaima.flicks.models.Movie;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     //list of movies
@@ -60,12 +62,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.tvTitle.setText(movie.getTitle());
         holder.tvOverview.setText(movie.getOverview());
 
-        // buikld url for poster image
+        // build url for poster image
         String ImageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
 
         //load image using glide
         GlideApp.with(context)
                 .load(ImageUrl)
+                .transform(new RoundedCornersTransformation(15, 0))
                 .placeholder(R.drawable.flicks_movie_placeholder)
                 .error(R.drawable.flicks_movie_placeholder)
                 .into(holder.ivPosterImage);
