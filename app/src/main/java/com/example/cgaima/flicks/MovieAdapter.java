@@ -1,6 +1,7 @@
 package com.example.cgaima.flicks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.cgaima.flicks.models.Config;
 import com.example.cgaima.flicks.models.Movie;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -84,7 +87,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     //create the viewholder as a static inner class
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
 
         //track view objects
         ImageView ivPosterImage;
@@ -98,6 +101,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             ivPosterImage = (ImageView) itemView.findViewById(R.id.ivPosterImage);
             tvOverview = (TextView) itemView.findViewById(R.id.tvOverview);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            //gets item position
+            int position = getAdapterPosition();
+            //make sure the position is valid/exists
+            if (position != RecyclerView.NO_POSITION)
+            {
+                Movie movie = movies.get(position);
+                // create intent for the new activity
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                // serialize the movie using parceler, use its short name as a key
+                intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(movie));
+                // show the activity
+                context.startActivity(intent);
+            }
         }
     }
 }
